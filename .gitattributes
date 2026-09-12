@@ -1,0 +1,22 @@
+# 仓库内存 LF，检出时按下列规则转换
+* text=auto
+
+# Windows 脚本必须保持 CRLF，否则 cmd.exe / PowerShell 解析可能出错
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# shell 脚本保持 LF
+*.sh   text eol=lf
+
+# 二进制文件不做任何转换
+*.ico  binary
+*.png  binary
+*.jpg  binary
+*.exe  binary
+*.dll  binary
+*.zip  binary
+*.7z   binary
+
+# 锁文件不参与 diff、不计入语言统计
+package-lock.json  -diff linguist-generated

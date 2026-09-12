@@ -1,0 +1,62 @@
+# =====================================================================
+# net-speed-widget — Electron 桌面挂件
+# =====================================================================
+
+# ---- 依赖 -----------------------------------------------------------
+# 542 MB、7300+ 文件，绝对不能提交
+node_modules/
+.pnpm-store/
+.yarn/
+
+# ---- electron-builder 产物 ------------------------------------------
+# 417 MB（含 win-unpacked 里的整套 Electron 运行时）
+dist/
+out/
+release/
+*.blockmap
+builder-debug.yml
+builder-effective-config.yaml
+latest.yml
+
+# 注意：build/ 不忽略 —— 里面的 build/icon.ico 是打包要用的应用图标，
+#       只有 37 KB，值得提交（tools/make-icon.js 也能随时重新生成）
+
+# ---- 日志 -----------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---- 本项目自检 / 运行时产生的临时文件 -------------------------------
+tray.png
+validate-report.txt
+node-stdout.tmp
+node-stderr.tmp
+
+# ---- 环境变量 -------------------------------------------------------
+.env
+.env.local
+.env.*.local
+
+# ---- 编辑器 / IDE ---------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.iml
+*.suo
+*.user
+*.sln.docstates
+
+# ---- 操作系统 -------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# ---- 杂项 -----------------------------------------------------------
+*~
+*.bak
+*.orig
+*.swp
+*.tmp

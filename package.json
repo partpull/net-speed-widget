@@ -1,0 +1,62 @@
+{
+  "name": "net-speed-widget",
+  "productName": "NetSpeedWidget",
+  "version": "1.0.0",
+  "private": true,
+  "description": "极简置顶网速悬浮窗，只显示下载/上传速度",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "author": "CAI JIAXING",
+  "copyright": "Copyright © 2026 CAI JIAXING",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "cli": "node tools/speed-cli.js 8 1000",
+    "check": "node tools/self-check.js",
+    "icon": "node tools/make-icon.js",
+    "build": "node tools/make-icon.js && electron-builder --win nsis portable",
+    "build:portable": "node tools/make-icon.js && electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.cline.netspeedwidget",
+    "productName": "NetSpeedWidget",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "NetSpeedWidget-${version}-portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "NetSpeedWidget-${version}-setup.exe"
+    }
+  }
+}
