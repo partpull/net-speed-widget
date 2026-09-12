@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# 同一分支连续推送时，取消上一次还没跑完的任务
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# 注意：这个工作流**刻意不执行 `npm install`**。
+# 所有检查都只依赖 Node 内置模块（zlib / fs / path），不需要下载 500MB 的
+# electron + electron-builder。好处是 CI 十几秒跑完，也不会因为 Electron
+# 二进制下载失败（国内镜像/网络问题）而误报红。
+jobs:
+  check:
+    name: ${{ matrix.os }} / node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: 语法检查（node --check）
+        shell: bash
+        run: |
+          set -e
+          files=$(ls src/*.js src/renderer/renderer.js tools/*.js)
+          for f in $files; do
+            node --check "$f"
+            echo "OK  $f"
+          done
+
+      - name: 模块自检（离线模式）
+        run: node tools/self-check.js --offline
+
+      - name: 生成图标并做结构 + 取样校验
+        run: node tools/make-icon.js
+
+      # 只在一条腿跑：deflate 的输出理论上可能随 zlib 版本变化，
+      # 多平台同时比对会引入不必要的抖动。
+      - name: 确认 build/icon.ico 与生成结果一致（防止改了图形忘记重新生成）
+        if: matrix.os == 'ubuntu-latest' && matrix.node == '20.x'
+        shell: bash
+        run: |
+          if ! git diff --exit-code -- build/icon.ico build/icon-256.png; then
+            echo "::error::build/icon.ico 与 tools/make-icon.js 的生成结果不一致。请先运行 npm run icon，再提交产物。"
+            exit 1
+          fi
+          echo "图标与生成结果完全一致"

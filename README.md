@@ -1,5 +1,7 @@
 # 网速悬浮窗 net-speed-widget
 
+[![CI](https://github.com/partpull/net-speed-widget/actions/workflows/ci.yml/badge.svg)](https://github.com/partpull/net-speed-widget/actions/workflows/ci.yml)
+
 一个极简的 Electron 桌面挂件：**永远置顶**，只显示两样东西 —— 下载速度和上传速度。
 
 ```
@@ -67,6 +69,15 @@ npm run check
 ```
 
 它会检查托盘图标的 PNG 能否正常生成、配置读写与夹取、以及**真实读取本机网卡计数器并连续采样 4 次**。全部通过时退出码为 0。
+
+只跑与网络无关的检查（CI 用这个）：
+
+```bash
+node tools/self-check.js --offline
+```
+
+`--offline` 会跳过实时采样那一步 —— 云主机没有真实流量，采样必然接近 0，
+那种环境下"能读到值"这件事本来就无法验证。
 
 想跑更完整的检查（额外做语法检查、实时采样，并写出报告文件）：
 
@@ -224,7 +235,9 @@ $7z = "node_modules\7zip-bin\win\x64\7za.exe"
 
 ```
 net-speed-widget/
+├── LICENSE                     MIT
 ├── package.json
+├── .github/workflows/ci.yml    语法检查 + 离线自检 + 图标校验
 ├── build/                     打包资源（由 npm run icon 生成）
 │   ├── icon.ico               多尺寸应用图标
 │   └── icon-256.png           预览图

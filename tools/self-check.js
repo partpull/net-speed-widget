@@ -4,12 +4,16 @@
 /**
  * 自检脚本：不需要启动 Electron，直接验证所有纯逻辑模块。
  *
- *   node tools/self-check.js
+ *   node tools/self-check.js             # 完整自检（含真实网卡采样）
+ *   node tools/self-check.js --offline   # 只跑与网络无关的检查（给 CI 用）
  *
  * 检查内容：
  *   1. tray-icon.js  — 能否生成合法的 PNG（校验签名与尺寸）
  *   2. config.js     — 默认值、区间夹取、位置持久化
  *   3. speed-monitor.js — 真实读取本机网卡计数器并连续采样 4 次
+ *
+ * `--offline` 会跳过第 3 项：CI 跑在云主机上，没有真实流量，采样必定接近 0，
+ * 那种环境下"能读到值"这件事无法验证，只会产生噪音。
  *
  * 全部通过时退出码为 0，否则为 1。
  */
@@ -20,6 +24,8 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const SRC = path.join(ROOT, 'src');
+const OFFLINE = process.argv.includes('--offline');
+const STARTED_AT = Date.now();
 
 let failures = 0;
 
@@ -66,6 +72,19 @@ check(
   Boolean(reread) && reread.x === 1234 && reread.y === 56,
   JSON.stringify(reread)
 );
+
+if (OFFLINE) {
+  console.log('\n=== 3. speed-monitor.js（--offline：已跳过）===');
+  console.log('  云主机没有真实网卡流量，采样必然接近 0，跳过以免产生噪音');
+  console.log('  想验证真实采样请在本地跑：npm run check');
+  fs.rmSync(tempDir, { recursive: true, force: true });
+  console.log(
+    failures === 0
+      ? `\n=== 全部通过（离线模式，用时 ${Date.now() - STARTED_AT}ms）===`
+      : `\n=== 有 ${failures} 项失败 ===`
+  );
+  process.exit(failures === 0 ? 0 : 1);
+}
 
 console.log('\n=== 3. speed-monitor.js（真实数据源）===');
 const { SpeedMonitor } = require(path.join(SRC, 'speed-monitor.js'));
