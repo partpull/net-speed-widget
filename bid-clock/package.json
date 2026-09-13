@@ -1,32 +1,28 @@
 {
-  "name": "net-speed-widget",
-  "productName": "NetSpeedWidget",
+  "name": "bid-clock",
+  "productName": "BidClock",
   "version": "1.0.0",
   "private": true,
-  "description": "极简置顶网速悬浮窗，只显示下载/上传速度",
+  "description": "开标时钟：置顶透明悬浮窗显示当前时间，到开标时间自动退出",
   "main": "src/main.js",
   "type": "commonjs",
   "author": "CAI JIAXING",
   "copyright": "Copyright © 2026 CAI JIAXING",
   "license": "MIT",
   "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev",
-    "cli": "node tools/speed-cli.js 8 1000",
+    "start": "node scripts/start.js",
+    "dev": "node scripts/start.js --dev",
     "check": "node tools/self-check.js",
-    "start:bid": "node ./bid-clock/scripts/start.js",
-    "check:bid": "node ./bid-clock/tools/self-check.js",
-    "icon": "node tools/make-icon.js",
-    "build": "node tools/make-icon.js && electron-builder --win nsis portable",
-    "build:portable": "node tools/make-icon.js && electron-builder --win portable"
+    "build": "electron-builder --win nsis portable",
+    "build:portable": "electron-builder --win portable"
   },
   "devDependencies": {
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8"
   },
   "build": {
-    "appId": "com.cline.netspeedwidget",
-    "productName": "NetSpeedWidget",
+    "appId": "com.cline.bidclock",
+    "productName": "BidClock",
     "asar": true,
     "directories": {
       "output": "dist"
@@ -36,7 +32,6 @@
       "package.json"
     ],
     "win": {
-      "icon": "build/icon.ico",
       "target": [
         {
           "target": "portable",
@@ -53,12 +48,12 @@
       ]
     },
     "portable": {
-      "artifactName": "NetSpeedWidget-${version}-portable.exe"
+      "artifactName": "BidClock-${version}-portable.exe"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "artifactName": "NetSpeedWidget-${version}-setup.exe"
+      "artifactName": "BidClock-${version}-setup.exe"
     }
   }
 }

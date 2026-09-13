@@ -283,4 +283,21 @@ net-speed-widget/
 
 ---
 
+## 附带：开标时钟（bid-clock）
+
+仓库里还有一个独立的小挂件 `bid-clock/`：**置顶透明**的悬浮钟，只显示当前时间
+（时:分:秒），选好开标时间（预设 **09:30** / **14:00**，或自己用下拉挑小时和分钟）
+后**到点自动退出** —— 用来确认是否已经到开标时间。和网速悬浮窗共用父项目里已经装好的
+Electron，不用再下一遍二进制。
+
+```bash
+npm run start:bid     # 启动开标时钟（等价于 bid-clock\scripts\start.bat）
+npm run check:bid     # 它的纯逻辑自检
+```
+
+拖数字可以移动，拖右下角小三角可以**等比缩放**（数字同步变大变小，横宽比不变）。
+细节见 [`bid-clock/README.md`](bid-clock/README.md)。
+
+---
+
 制作人：**CAI JIAXING**
