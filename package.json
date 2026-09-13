@@ -14,8 +14,6 @@
     "dev": "electron . --dev",
     "cli": "node tools/speed-cli.js 8 1000",
     "check": "node tools/self-check.js",
-    "start:bid": "node ./bid-clock/scripts/start.js",
-    "check:bid": "node ./bid-clock/tools/self-check.js",
     "icon": "node tools/make-icon.js",
     "build": "node tools/make-icon.js && electron-builder --win nsis portable",
     "build:portable": "node tools/make-icon.js && electron-builder --win portable"
